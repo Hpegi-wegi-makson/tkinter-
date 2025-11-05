@@ -20,7 +20,7 @@ class HelloWorld:
         self.entry_role_new_user_value = StringVar()
         self.entry_fio_new_request = StringVar()
 
-        self.conn = sqlite3.connect(r'C:\\Users\\Maksz\\PycharmProjects\\Tkinter_2\\Existing_accounts.db')  # C:\Users\PC-4\Desktop\Tkinter\main.py
+        self.conn = sqlite3.connect(r'C:/Users/maks_/PycharmProjects/Avto_click/Existing_accounts.db')  # C:\Users\PC-4\Desktop\Tkinter\main.py
         self.cursor = self.conn.cursor()
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS User (
                           id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -53,8 +53,8 @@ class HelloWorld:
             WHERE login="{login}"
         ''',
                             )
-        self.result = self.cursor.fetchone()
-        if not self.result:
+        result = self.cursor.fetchone()
+        if not result:
             self.cursor.execute(
                 "INSERT INTO User (login, password, fio,role) VALUES (?,?,?,?)",
                 (login, password, fio, role)
@@ -103,7 +103,7 @@ class HelloWorld:
     def main_screan(self):
         for widget in self.main_window.winfo_children():  # удаляет все прошлые элементы
             widget.destroy()
-
+        print("main_screan", self.result)
         if self.result[0] == 'admin':
 
             self.button_new_request = ttk.Button(text="Новая заявка", width=25, command=self.creat_new_request)
@@ -139,7 +139,7 @@ class HelloWorld:
         self.cursor.execute('''
         SELECT data, broken_devices, problem_description, status_request, fio_client
          FROM Request ''')
-        self.result = self.cursor.fetchall()
+        self.result_request = self.cursor.fetchall()
 
         columns = ('Дата', 'Сломанные устройства', 'Описание проблемы', 'Запрос о статусе', 'ФИО клиента')
 
@@ -165,7 +165,7 @@ class HelloWorld:
         for q in columns:
             self.table.heading(q, text=q)
 
-        for w in self.result:
+        for w in self.result_request:
             self.table.insert('', END, values=w)
 
 
@@ -259,7 +259,7 @@ class HelloWorld:
         self.cursor.execute('''
         SELECT * FROM User
         ''')
-        self.result = self.cursor.fetchall()
+        self.result_users = self.cursor.fetchall()
         print(self.result)
 
         self.user_columns = ('id', 'login', 'password', 'fio', 'role')
@@ -289,7 +289,7 @@ class HelloWorld:
         for col in self.user_columns:
             self.user_table.heading(col, text=col)
 
-        for res in self.result:
+        for res in self.result_users:
             self.user_table.insert('', END, values=res)
 
         back_button = Button( text="Назад", command=self.main_screan)
@@ -348,6 +348,5 @@ class HelloWorld:
 
 if __name__ == "__main__":
     app = HelloWorld()
-
 
 
